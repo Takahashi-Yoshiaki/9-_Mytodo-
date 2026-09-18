@@ -1,122 +1,69 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+  type Todo = {
+  id: string
+  title: string
+  done: boolean
+  createdAt: string
 }
 
+function App() {
+  const [title, setTitle] = useState("")
+  const [todos, setTodos] = useState<Todo[]>([])
+
+  function handleAddTodo(){
+    const trimmedTitle = title.trim()
+    if(trimmedTitle === "")
+      return
+    const newTodo:Todo = {
+      id: crypto.randomUUID(),
+      title: trimmedTitle,
+      done: false,
+      createdAt: new Date().toISOString()
+    }
+    setTodos([...todos, newTodo])
+    setTitle("")  
+    }
+    
+    function handleToggleDone(id:string){
+      setTodos(todos.map((todo) => 
+        todo.id===id
+      ?{...todo,done:!todo.done}
+      :todo
+))
+    }
+
+    function handleDeleteTodo(id:string){
+      setTodos(todos.filter((todo) => todo.id !== id))
+    }
+    
+  return (
+    <main>
+      <h1>Todoリスト</h1>
+
+      <button onClick={handleAddTodo}>追加</button>
+
+      <input
+      value={title}
+      onChange={(event) => setTitle(event.target.value)}
+      placeholder="Todoを入力してください"
+      />
+      
+      <p>入力中: {title}</p>
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id}>
+            <input
+            type="checkbox"
+            checked={todo.done}
+            onChange={() => handleToggleDone(todo.id)}
+            />
+            {todo.title}{todo.done ? "完了" : "未着手"}
+            <button onClick={()=> handleDeleteTodo(todo.id)}>削除</button>
+          </li>
+        ))}
+      </ul>
+    </main>
+  )
+}
 export default App
