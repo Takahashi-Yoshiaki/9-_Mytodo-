@@ -1,69 +1,85 @@
 import { useState } from 'react'
 import './App.css'
-  type Todo = {
-  id: string
-  title: string
-  done: boolean
-  createdAt: string
-}
+import type { Todo } from './types'
+import TodoForm from './components/TodoForm'
+import TodoList from './components/TodoList'
+
+type Filter = 'all' | 'active' | 'completed'
 
 function App() {
-  const [title, setTitle] = useState("")
   const [todos, setTodos] = useState<Todo[]>([])
+  const [filter, setFilter] = useState<Filter>('all')
 
-  function handleAddTodo(){
-    const trimmedTitle = title.trim()
-    if(trimmedTitle === "")
-      return
-    const newTodo:Todo = {
+  function handleAddTodo(title: string) {
+    const newTodo: Todo = {
       id: crypto.randomUUID(),
-      title: trimmedTitle,
+      title: title,
       done: false,
-      createdAt: new Date().toISOString()
-    }
-    setTodos([...todos, newTodo])
-    setTitle("")  
-    }
-    
-    function handleToggleDone(id:string){
-      setTodos(todos.map((todo) => 
-        todo.id===id
-      ?{...todo,done:!todo.done}
-      :todo
-))
+      createdAt: new Date().toISOString(),
     }
 
-    function handleDeleteTodo(id:string){
-      setTodos(todos.filter((todo) => todo.id !== id))
+    setTodos([...todos, newTodo])
+  }
+
+  function handleToggleDone(id: string) {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id
+          ? { ...todo, done: !todo.done }
+          : todo
+      )
+    )
+  }
+
+  function handleDeleteTodo(id: string) {
+    setTodos(todos.filter((todo) => todo.id !== id))
+  }
+
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === 'active') {
+      return !todo.done
     }
-    
+
+    if (filter === 'completed') {
+      return todo.done
+    }
+
+    return true
+  })
+
+  const remainingCount = todos.filter(
+    (todo) => !todo.done
+  ).length
+
   return (
     <main>
       <h1>Todoリスト</h1>
 
-      <button onClick={handleAddTodo}>追加</button>
+      <TodoForm onAdd={handleAddTodo} />
 
-      <input
-      value={title}
-      onChange={(event) => setTitle(event.target.value)}
-      placeholder="Todoを入力してください"
+      <div>
+        <button onClick={() => setFilter('all')}>
+          全部
+        </button>
+
+        <button onClick={() => setFilter('active')}>
+          未完了
+        </button>
+
+        <button onClick={() => setFilter('completed')}>
+          完了
+        </button>
+      </div>
+
+      <p>未完了：{remainingCount}件</p>
+
+      <TodoList
+        todos={filteredTodos}
+        onToggleDone={handleToggleDone}
+        onDelete={handleDeleteTodo}
       />
-      
-      <p>入力中: {title}</p>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <input
-            type="checkbox"
-            checked={todo.done}
-            onChange={() => handleToggleDone(todo.id)}
-            />
-            {todo.title}{todo.done ? "完了" : "未着手"}
-            <button onClick={()=> handleDeleteTodo(todo.id)}>削除</button>
-          </li>
-        ))}
-      </ul>
     </main>
   )
 }
+
 export default App
