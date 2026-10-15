@@ -5,12 +5,14 @@ type TodoListProps = {
   todos: Todo[]
   onToggleDone: (id: string) => void
   onDelete: (id: string) => void
+  onEdit: (id: string, newTitle: string) => void
 }
 
 function TodoList({
   todos,
   onToggleDone,
   onDelete,
+  onEdit,
 }: TodoListProps) {
   return (
     <ul>
@@ -20,6 +22,7 @@ function TodoList({
           todo={todo}
           onToggleDone={onToggleDone}
           onDelete={onDelete}
+          onEdit={onEdit}
         />
       ))}
     </ul>

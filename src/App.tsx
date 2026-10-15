@@ -21,6 +21,22 @@ function App() {
     setTodos([...todos, newTodo])
   }
 
+  function handleEditTodo(id: string, newTitle: string) {
+  const trimmedTitle = newTitle.trim()
+
+  if (trimmedTitle === '') {
+    return
+  }
+
+  setTodos(
+    todos.map((todo) =>
+      todo.id === id
+        ? { ...todo, title: trimmedTitle }
+        : todo
+    )
+  )
+}
+
   function handleToggleDone(id: string) {
     setTodos(
       todos.map((todo) =>
@@ -52,32 +68,52 @@ function App() {
   ).length
 
   return (
-    <main>
-      <h1>Todoリスト</h1>
+    <main className="bg-gray-100 min-h-screen p-4">
+      <div className="bg-white p-4 max-w-2xl mx-auto rounded-xl shadow-md">
+        <h1 className="text-red-400">Todoリスト</h1>
 
-      <TodoForm onAdd={handleAddTodo} />
 
-      <div>
-        <button onClick={() => setFilter('all')}>
-          全部
-        </button>
+        <TodoForm onAdd={handleAddTodo} />
 
-        <button onClick={() => setFilter('active')}>
-          未完了
-        </button>
+        <div className="flex gap-2 py-2 mt-4 mb-2 justify-center">
+          <button 
+          className={
+            filter === "all"?"bg-red-400 text-white px-4 py-1 rounded hover:bg-red-500"
+            :"bg-blue-400 text-white px-4 py-1 rounded hover:bg-blue-600"
+          }
+          
+          onClick={() => setFilter('all')}>
+            全部
+          </button>
 
-        <button onClick={() => setFilter('completed')}>
-          完了
-        </button>
+          <button 
+          className={
+            filter === "active"?"bg-red-400 text-white px-4 py-1 rounded hover:bg-red-500"
+            :"bg-blue-400 text-white px-4 py-1 rounded hover:bg-blue-600"
+          }
+          onClick={() => setFilter('active')}>
+            未完了
+          </button>
+
+          <button 
+          className={
+            filter === "completed"?"bg-red-400 text-white px-4 py-1 rounded hover:bg-red-500"
+            :"bg-blue-400 text-white px-4 py-1 rounded hover:bg-blue-600"
+          }
+          onClick={() => setFilter('completed')}>
+            完了
+          </button>
+        </div>
+
+        <p>未完了：{remainingCount}件</p>
+
+        <TodoList
+          todos={filteredTodos}
+          onToggleDone={handleToggleDone}
+          onDelete={handleDeleteTodo}
+          onEdit={handleEditTodo}
+        />
       </div>
-
-      <p>未完了：{remainingCount}件</p>
-
-      <TodoList
-        todos={filteredTodos}
-        onToggleDone={handleToggleDone}
-        onDelete={handleDeleteTodo}
-      />
     </main>
   )
 }

@@ -19,13 +19,16 @@ function TodoForm({ onAdd }: TodoFormProps) {
   }
 
   return (
-    <div>
+    <div className="flex gap-2">
       <input
+        className="flex-1 border border-gray-300 rounded px-2 py-1"
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         placeholder="Todoを入力してください"
       />
-      <button onClick={handleSubmit}>追加</button>
+      <button 
+      className="bg-blue-400 text-white px-4 py-1 rounded hover:bg-blue-600"
+      onClick={handleSubmit}>追加</button>
     </div>
   )
 }
