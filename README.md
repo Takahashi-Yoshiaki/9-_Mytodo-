@@ -30,31 +30,19 @@ https://takahashi-yoshiaki.github.io/9-_Mytodo-/
 
 ## 起動方法
 
-### 1. リポジトリを取得
-
 ```bash
+# リポジトリをクローン
 git clone https://github.com/Takahashi-Yoshiaki/9-_Mytodo-.git
-```
-
-### 2. プロジェクトへ移動
-
-```bash
 cd 9-_Mytodo-
-```
 
-### 3. 依存パッケージをインストール
-
-```bash
+# 依存パッケージをインストール
 npm install
-```
 
-### 4. 開発サーバーを起動
-
-```bash
+# 開発サーバーを起動
 npm run dev
 ```
 
-ターミナルに表示されたローカルURLをブラウザで開いてください。
+起動後、ターミナルに表示されたローカルURLをブラウザで開いてください。
 
 ## その他のコマンド
 
