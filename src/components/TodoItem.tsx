@@ -81,7 +81,7 @@ return(
           : 'flex-1 text-left'
       }
     >
-      {todo.title} {todo.done ? '完了' : '未着手'}
+      {todo.title} {todo.done ? '完了' : '未完了'}
     </span>
 
     <button
